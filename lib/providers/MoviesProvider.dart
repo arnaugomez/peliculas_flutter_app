@@ -12,9 +12,9 @@ class MoviesProvider extends ChangeNotifier {
   List<Result> popularMovies = [];
   int _onDisplayPage = 1;
   int _popularPage = 1;
+  bool isGettingPopularMovies = false;
 
   MoviesProvider() {
-    print("Movies provider inicializado");
     this.getOnDisplayMovies();
     this.getPopularMovies();
   }
@@ -42,10 +42,14 @@ class MoviesProvider extends ChangeNotifier {
   }
 
   void getPopularMovies() async {
-    final popularResponse = PopularResponse.fromJson(
-        await _getJsonData('3/movie/popular', _popularPage));
-    popularMovies = [...popularMovies, ...popularResponse.results];
-    _popularPage++;
-    notifyListeners();
+    if (!isGettingPopularMovies) {
+      isGettingPopularMovies = true;
+      final popularResponse = PopularResponse.fromJson(
+          await _getJsonData('3/movie/popular', _popularPage));
+      popularMovies = [...popularMovies, ...popularResponse.results];
+      _popularPage++;
+      notifyListeners();
+      isGettingPopularMovies = false;
+    }
   }
 }
