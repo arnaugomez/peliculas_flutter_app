@@ -16,7 +16,7 @@ class DetailsScreen extends StatelessWidget {
           delegate: SliverChildListDelegate([
             _PosterAndTitle(movie: movie),
             _Overview(movie: movie),
-            CastingCards(movie: movie),
+            CastingCards(movieId: movie.id),
             SizedBox(height: 30)
           ]),
         )
@@ -74,30 +74,32 @@ class _PosterAndTitle extends StatelessWidget {
                 image: NetworkImage(movie.posterUrl),
               )),
           SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                movie.title,
-                style: textTheme.headline5,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-              Text(
-                movie.originalTitle,
-                style: textTheme.subtitle1,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(Icons.star_outline, size: 20, color: Colors.grey),
-                  SizedBox(width: 5),
-                  Text("${movie.voteAverage}", style: textTheme.caption),
-                ],
-              )
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  movie.title,
+                  style: textTheme.headline5,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                Text(
+                  movie.originalTitle,
+                  style: textTheme.subtitle1,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.star_outline, size: 20, color: Colors.grey),
+                    SizedBox(width: 5),
+                    Text("${movie.voteAverage}", style: textTheme.caption),
+                  ],
+                )
+              ],
+            ),
           )
         ],
       ),

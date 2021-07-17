@@ -14,6 +14,8 @@ class MoviesProvider extends ChangeNotifier {
   int _popularPage = 1;
   bool isGettingPopularMovies = false;
 
+  Map<int, List<Cast>> moviesCast = {};
+
   MoviesProvider() {
     this.getOnDisplayMovies();
     this.getPopularMovies();
@@ -51,5 +53,17 @@ class MoviesProvider extends ChangeNotifier {
       notifyListeners();
       isGettingPopularMovies = false;
     }
+  }
+
+  Future<List<Cast>> getMovieCast(int movieId) async {
+    List<Cast>? list = moviesCast[movieId];
+    if (list != null) {
+      return list;
+    }
+    final cast =
+        CreditsResponse.fromJson(await _getJsonData("3/movie/$movieId/credits"))
+            .cast;
+    moviesCast[movieId] = cast;
+    return cast;
   }
 }
