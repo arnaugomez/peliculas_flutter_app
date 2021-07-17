@@ -10,6 +10,8 @@ class MoviesProvider extends ChangeNotifier {
 
   List<Result> onDisplayMovies = [];
   List<Result> popularMovies = [];
+  int _onDisplayPage = 1;
+  int _popularPage = 1;
 
   MoviesProvider() {
     print("Movies provider inicializado");
@@ -17,34 +19,33 @@ class MoviesProvider extends ChangeNotifier {
     this.getPopularMovies();
   }
 
-  void getOnDisplayMovies() async {
-    var url = Uri.https(_baseUrl, "3/movie/now_playing", {
+  Future<String> _getJsonData(String route, [int page = 1]) async {
+    var url = Uri.https(_baseUrl, route, {
       "api_key": _apiKey,
       'language': _language,
-      'page': "1",
+      'page': "$page",
     });
 
     var response = await http.get(url);
     if (response.statusCode != 200) {
       print("An error occurred. Server status is ${response.statusCode}");
-    } else {
-      NowPlayingResponse nowPlayingResponse =
-          NowPlayingResponse.fromJson(response.body);
-      onDisplayMovies = [...onDisplayMovies, ...nowPlayingResponse.results];
-      notifyListeners();
     }
+    return response.body;
+  }
+
+  void getOnDisplayMovies() async {
+    NowPlayingResponse nowPlayingResponse = NowPlayingResponse.fromJson(
+        await _getJsonData("3/movie/now_playing", _onDisplayPage));
+    onDisplayMovies = [...onDisplayMovies, ...nowPlayingResponse.results];
+    _onDisplayPage++;
+    notifyListeners();
   }
 
   void getPopularMovies() async {
-    var url = Uri.https(_baseUrl, "3/movie/popular", {
-      "api_key": _apiKey,
-      'language': _language,
-      'page': "1",
-    });
-
-    final response = await http.get(url);
-    final popularResponse = PopularResponse.fromJson(response.body);
+    final popularResponse = PopularResponse.fromJson(
+        await _getJsonData('3/movie/popular', _popularPage));
     popularMovies = [...popularMovies, ...popularResponse.results];
+    _popularPage++;
     notifyListeners();
   }
 }

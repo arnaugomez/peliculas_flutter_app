@@ -40,7 +40,6 @@ class _PopularMovieList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final placeholder = AssetImage('./assets/no-image.jpg');
     return Expanded(
         child: ListView.builder(
             itemCount: movies.length,
@@ -50,34 +49,49 @@ class _PopularMovieList extends StatelessWidget {
                 child: GestureDetector(
                     onTap: () => Navigator.pushNamed(context, 'details',
                         arguments: "movie-instance"),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        clipBehavior: Clip.antiAlias,
-                        child: Container(
-                            width: 130,
-                            height: double.infinity,
-                            color: Colors.grey[900],
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Expanded(
-                                      child: FadeInImage(
-                                    placeholder: placeholder,
-                                    image:
-                                        NetworkImage(movies[index].posterUrl),
-                                    fit: BoxFit.cover,
-                                  )),
-                                  Container(
-                                    width: double.infinity,
-                                    padding: EdgeInsets.all(8),
-                                    child: Text(
-                                      movies[index].title,
-                                      maxLines: 1,
-                                      textAlign: TextAlign.center,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  )
-                                ])))))));
+                    child: _MoviePoster(movie: movies[index])))));
+  }
+}
+
+class _MoviePoster extends StatelessWidget {
+  const _MoviePoster({
+    Key? key,
+    required this.movie,
+  }) : super(key: key);
+
+  final Result movie;
+
+  @override
+  Widget build(BuildContext context) {
+    final placeholder = AssetImage('./assets/no-image.jpg');
+    return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        clipBehavior: Clip.antiAlias,
+        child: Container(
+            width: 130,
+            height: double.infinity,
+            color: Colors.grey[900],
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                      child: FadeInImage(
+                    placeholder: placeholder,
+                    image:
+                        NetworkImage(movie.posterUrl),
+                    fit: BoxFit.cover,
+                  )),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      movie.title,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ])));
   }
 }
