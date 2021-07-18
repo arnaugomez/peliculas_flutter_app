@@ -33,6 +33,8 @@ class Result {
   double voteAverage;
   int voteCount;
 
+  String? heroId;
+
   factory Result.fromJson(String str) => Result.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());

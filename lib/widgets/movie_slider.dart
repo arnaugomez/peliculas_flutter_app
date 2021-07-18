@@ -77,12 +77,16 @@ class _PopularMovieList extends StatelessWidget {
             controller: scrollController,
             itemCount: movies.length,
             scrollDirection: Axis.horizontal,
-            itemBuilder: (BuildContext context, int index) => Container(
-                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                child: GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, 'details',
-                        arguments: movies[index]),
-                    child: _MoviePoster(movie: movies[index])))));
+            itemBuilder: (BuildContext context, int index) {
+              final movie = movies[index];
+              movie.heroId = 'MOVIE-$index-${movie.id}';
+              return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, 'details',
+                          arguments: movies[index]),
+                      child: _MoviePoster(movie: movie)));
+            }));
   }
 }
 
@@ -97,32 +101,32 @@ class _MoviePoster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final placeholder = AssetImage('./assets/no-image.jpg');
-    return ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        clipBehavior: Clip.antiAlias,
-        child: Container(
-            width: 130,
-            height: double.infinity,
-            color: Colors.grey[900],
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                      child: FadeInImage(
-                    placeholder: placeholder,
-                    image: NetworkImage(movie.posterUrl),
-                    fit: BoxFit.cover,
-                  )),
-                  Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        movie.title,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white),
-                      ))
-                ])));
+    return Container(
+        width: 110,
+        height: double.infinity,
+        child:
+            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Expanded(
+              child: Hero(
+            tag: movie.heroId!,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: FadeInImage(
+                placeholder: placeholder,
+                image: NetworkImage(movie.posterUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+          )),
+          Container(
+              width: double.infinity,
+              margin: EdgeInsets.only(top: 8),
+              child: Text(
+                movie.title,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+              ))
+        ]));
   }
 }
