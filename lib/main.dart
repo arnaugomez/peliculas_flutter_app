@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:peliculas_flutter_app/helpers/create_widget_builder.dart';
-import 'package:peliculas_flutter_app/providers/MoviesProvider.dart';
+import 'package:peliculas_flutter_app/providers/movies_provider.dart';
 import 'package:peliculas_flutter_app/screens/screens.dart';
 import 'package:provider/provider.dart';
 
